@@ -1,0 +1,79 @@
+package runner;
+
+import org.openqa.selenium.By;
+import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.Status;
+
+import utils.Base;
+import utils.LoggerHandler;
+import utils.Reporter;
+import utils.Screenshot;
+import utils.WebDriverHelper;
+
+public class TestClass extends Base {
+    WebDriverHelper wb;
+    ExtentReports et;
+    ExtentTest test;
+
+    @BeforeMethod
+    public void mdr(){
+        openBrowser();
+        wb = new WebDriverHelper(driver);
+        et = Reporter.generateExtentReport("launch");
+        test=et.createTest("testw");
+    }
+    @Test(priority = 1)
+    public void ghy() throws Exception{
+        wb.hoverOverElement(By.xpath("//*[@id=\"rendered-content\"]/div/div[1]/div/div[1]/nav/div[2]/div/div/div/div[1]/div[2]/div/div/button/span/span"));
+        LoggerHandler.info("hover on explore");
+        test.log(Status.PASS, "hover on explore");
+        wb.clickOnElement(By.xpath("//*[@id=\"rendered-content\"]/div/div[1]/div/div[1]/nav/div[2]/div/div/div/div[1]/div[2]/div/div/div/nav/div/div/div/div/div[1]/div[4]/ul/li[1]/div/a"));
+        wb.sendKeys(By.xpath("//*[@id=\"search-autocomplete-input\"]"), "data science");
+        wb.enterAction(By.xpath("//*[@id=\"search-autocomplete-input\"]"));
+        //  String val = wb.getText(By.xpath("//*[@id=\"search-autocomplete-input\"]"));
+        // System.out.println(val);
+         // Assert.assertEquals(val, "data science");
+        Screenshot.captureScreenShot("science");
+        Thread.sleep(5000);
+
+    }
+    @Test(priority = 2)
+    public void ser() throws Exception{
+        driver.get("https://www.coursera.org/about/cookies-manage");
+        Thread.sleep(5000);
+        wb.clickOnElement(By.xpath("//*[@id=\"onetrust-pc-sdk\"]/div/div[3]/div[1]/button"));
+        wb.clickOnElement(By.xpath("//*[@id=\"c-ph-right-nav\"]/ul/li[1]/a"));
+        LoggerHandler.info("click on login");
+        LoggerHandler.info("click");
+        LoggerHandler.info("clic");
+        LoggerHandler.info("c");
+        LoggerHandler.info("MA");
+        LoggerHandler.info("clic");
+        LoggerHandler.info("on");
+        LoggerHandler.info("M");
+        LoggerHandler.info("MAH");
+        LoggerHandler.info("MA");
+        LoggerHandler.info("MAH");
+        wb.clickOnElement(By.cssSelector("body > div._1widl7g > div > div > section > section > div:nth-child(2) > p.auth-form-type-navigation.css-kd5ri9 > span > button"));
+        Screenshot.captureScreenShot("coursera_screenshot");
+        test.addScreenCaptureFromPath(System.getProperty("user.dir")+"/screenshots/coursera_screenshot.png");
+        Thread.sleep(5000);
+    }
+    
+    @AfterMethod
+    public void frd(){
+        if(et != null){
+            et.flush();
+        }
+        if(driver != null){
+            driver.quit();
+        }
+    }
+
+}

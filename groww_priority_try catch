@@ -1,0 +1,89 @@
+groww priority testing
+
+
+package runner;
+
+import java.net.URL;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.events.EventFiringDecorator;
+import org.openqa.selenium.support.events.WebDriverListener;
+import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import utils.EventHandler;
+
+public class TestSample {
+    
+    static WebDriver driver;
+
+    @BeforeMethod
+    void caseone()
+    {
+        try {
+        
+              driver = new RemoteWebDriver(new URL("http://localhost:4444"), new ChromeOptions());
+            
+            // Maximize the browser window
+            driver.manage().window().maximize();
+                            
+            // Add the implicit wait
+            driver.manage().timeouts().implicitlyWait(java.time.Duration.ofSeconds(10));
+                        
+            // Add the page load timeout
+            driver.manage().timeouts().pageLoadTimeout(java.time.Duration.ofSeconds(10));
+                         
+            // Initialize the event listener
+            WebDriverListener listener = new EventHandler();
+            driver = new EventFiringDecorator<>(listener).decorate(driver);
+
+            // Start your script from here
+            driver.get("https://groww.in/");
+            Thread.sleep(1000);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test(priority = 1)
+    public void test1() {
+        try {
+            driver.findElement(By.xpath("(//button[@type=\"button\"])[1]")).click();
+            Thread.sleep(1000);
+
+            driver.navigate().back();
+            Thread.sleep(1000);
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test(priority = 2)
+    public void test2() {
+        try {
+            driver.findElement(By.xpath("(//button[@type=\"button\"])[1]")).click();
+            Thread.sleep(1000);
+
+            String ex = driver.findElement(By.xpath("//h1[@class=\"lils382Title contentPrimary displayLarge\"]")).getText();
+            String ac = "Welcome to Groww";
+            Assert.assertEquals(ex, ac);
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @AfterMethod
+
+    public void end() {
+        driver.quit();
+    }
+
+}

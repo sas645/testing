@@ -28,3 +28,9 @@ public class ExcelReader {
         return value;
     }
 }
+
+
+
+
+ExcelReader reader=new ExcelReader();
+        String username=reader.getCellData("Sheet1", 1, 0);

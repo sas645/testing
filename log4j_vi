@@ -1,0 +1,69 @@
+# Root logger definition
+log4j.rootLogger=INFO, console, file
+
+# Console Appender
+log4j.appender.console=org.apache.log4j.ConsoleAppender
+log4j.appender.console.layout=org.apache.log4j.PatternLayout
+log4j.appender.console.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p %c{1}:%L - %m%n
+
+# File Appender (Daily Rolling File Appender for date-based log files)
+log4j.appender.file=org.apache.log4j.DailyRollingFileAppender
+log4j.appender.file.File=logs/application.log
+log4j.appender.file.Append=true
+log4j.appender.file.DatePattern='.'yyyy-MM-dd
+log4j.appender.file.layout=org.apache.log4j.PatternLayout
+log4j.appender.file.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p %c{1}:%L - %m%n
+
+# Specific Logger (optional)
+# log4j.logger.com.example.MyClass=DEBUG, specificFile
+# log4j.appender.specificFile=org.apache.log4j.FileAppender
+# log4j.appender.specificFile.File=logs/myclass.log
+# log4j.appender.specificFile.layout=org.apache.log4j.PatternLayout
+# log4j.appender.specificFile.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p %c{1}:%L - %m%n
+
+
+
+
+
+package runner;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.time.Duration;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.events.EventFiringDecorator;
+import org.openqa.selenium.support.events.WebDriverListener;
+import org.testng.annotations.BeforeMethod;
+
+import utils.EventHandler;
+
+public class TestAmazon {
+	public static WebDriver driver;
+	public static final int IMPLICIT_WAIT_TIME = 10;
+	public static final int PAGE_LOAD_TIME = 15;
+	private static final Logger logger = Logger.getLogger(TestAmazon.class);
+
+	@BeforeMethod
+	public void openBrowser() throws MalformedURLException {
+		logger.info("Info log example");
+		ChromeOptions options = new ChromeOptions();
+		options.addArguments("--remote-allow-origins=*");
+
+		driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), options);
+
+		driver.manage().window().maximize();
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(IMPLICIT_WAIT_TIME));
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(PAGE_LOAD_TIME));
+
+		// Attach Event Listener
+		WebDriverListener listener = new EventHandler();
+		driver = new EventFiringDecorator<>(listener).decorate(driver);
+		logger.info("Info log example");
+
+	}
+}

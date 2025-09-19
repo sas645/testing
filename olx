@@ -1,0 +1,28 @@
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+
+public class HandleLocationPopup {
+    public static void main(String[] args) {
+        // Set Chrome options
+        ChromeOptions options = new ChromeOptions();
+
+        // 0 = default, 1 = allow, 2 = block
+        options.addArguments("--disable-notifications");
+        options.addArguments("--disable-geolocation");
+        
+        // OR use prefs to block location
+        java.util.HashMap<String, Object> prefs = new java.util.HashMap<>();
+        prefs.put("profile.default_content_setting_values.geolocation", 2); // 2 = Block
+        options.setExperimentalOption("prefs", prefs);
+
+        // Launch browser
+        WebDriver driver = new ChromeDriver(options);
+        driver.get("https://www.olx.in/");
+
+        // Perform your automation
+        System.out.println("Title: " + driver.getTitle());
+
+        driver.quit();
+    }
+}
